@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { dataSource, getFeedsToPoll, insertArticle } from "./db";
+import { getFeedsToPoll, insertArticle } from "./db";
 import { parseFeed } from "./parsing";
 import { pollFeed } from "./polling";
 
@@ -19,12 +19,11 @@ function main () {
         pollFeed(feed)
         .then((raw) => parseFeed(raw))
         .then((parsed) => insertArticle(parsed))
+        .then((inserted) => console.log(inserted))
         .catch((err) => {
             console.log(`error in: ${feed}:${err}`);
         }) 
     });
 }
 
-dataSource.initialize()
-.then(() => main())
-.catch((err) => console.log(err));
+main()

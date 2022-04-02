@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-export interface rawRSS {
-    content: string
+export class rawRSS {
+    content!: string
 }
 
 @Entity()

@@ -24,7 +24,12 @@ const articleRepository = dataSource.getRepository(parsedRSS);
  * @param content Article to insert.
  */
 export async function insertArticle (content: parsedRSS) {
-    await articleRepository.save(content);
+    if (!dataSource.isInitialized) {
+        await dataSource.initialize();
+    }
+    
+    let insertedContent = await articleRepository.save(content);
+    return insertedContent;
 }
 
 /**
