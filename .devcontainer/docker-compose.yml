@@ -17,7 +17,7 @@ services:
     - LOG_LEVEL=6
     command: /bin/zsh -c "while sleep 1000; do :; done"
   database:
-    image: postgres:13
+    image: postgres:14
     restart: unless-stopped
     environment:
       - POSTGRES_DB=polling_db
