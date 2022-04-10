@@ -46,6 +46,7 @@
   "dependencies": {
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
+    "skiosa-orm": "github:skiosa/orm",
     "typeorm": "^0.3.4"
   },
   "devDependencies": {

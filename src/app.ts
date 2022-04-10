@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { getFeedsToPoll, insertArticle } from "./db";
+import { getFeedsToPoll, insertArticles } from "./db";
 import { parseFeed } from "./parsing";
 import { pollFeed } from "./polling";
 
@@ -18,7 +18,7 @@ function main () {
     feeds.forEach(feed => {
         pollFeed(feed)
         .then((raw) => parseFeed(raw))
-        .then((parsed) => insertArticle(parsed))
+        .then((parsed) => insertArticles(parsed))
         .then((inserted) => console.log(inserted))
         .catch((err) => {
             console.log(`error in: ${feed}:${err}`);
