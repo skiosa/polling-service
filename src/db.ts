@@ -16,12 +16,11 @@ export async function insertArticles (articles: Array<Article>) {
     
     let promises = new Array();
 
-    articles.forEach(article => {;
+    articles.forEach(article => {
         promises.push(articleRepository.save(article));
     });
     
-    let insertedContent = await Promise.all(promises);
-    return insertedContent;
+    return await Promise.all(promises);
 }
 
 /**
