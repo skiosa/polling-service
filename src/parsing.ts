@@ -18,7 +18,7 @@ export async function parseFeed (rss: RssType, feed: Feed): Promise<Array<Articl
         let pubDate = hasPubDate? new Date(element.pubDate!) : null;
 
         // check, whether article is potentially new (reduce duplicates as early as possible)
-        if (!hasPubDate || pubDate!.getDate() > feed.lastPolledAt.getDate()) {
+        if (!hasPubDate || pubDate! > feed.lastPolledAt) {
             let article = new Article();
 
             // link, description and title are required per RSS-standard, therefore there's no need to check, whether they exist
