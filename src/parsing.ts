@@ -5,19 +5,20 @@ import { rssType } from "./types";
 /**
  * parses raw data from a RSS-Feed.
  * 
- * @param feed raw feed-data to parse.
- * @returns parsed article data.
+ * @param rss RSS-Feed-Object to parse.
+ * @param feed RSS-Feed to link to.
+ * @returns parsed article data array.
  */
 export async function parseFeed (rss: rssType, feed: Feed): Promise<Array<Article>> {
     let arr: Array<Article> = new Array();
     
+    // parse each item asynchronously
     const promises = rss.items.map(async element => {
         let hasPubDate = !(element.pubDate === undefined);
         let pubDate = hasPubDate? new Date(element.pubDate!) : null;
 
-        // console.log(element);
-
-        if (!hasPubDate || pubDate!.getDate() < Date.now()) {
+        // check, whether article is potentially new (reduce duplicates as early as possible)
+        if (!hasPubDate || pubDate!.getDate() > feed.lastPolledAt.getDate()) {
             let article = new Article();
 
             // link, description and title are required per RSS-standard, therefore there's no need to check, whether they exist
@@ -39,6 +40,7 @@ export async function parseFeed (rss: rssType, feed: Feed): Promise<Array<Articl
         }
     });
 
+    // wait for all items to be parsed (otherwise an empty array would be returned)
     await Promise.all(promises);
     return(arr);
 }

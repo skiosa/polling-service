@@ -2,6 +2,7 @@ import { Feed } from "skiosa-orm";
 import Parser from 'rss-parser';
 import { rssType } from "./types";
 
+// initialize rss-parser with additional 'description' field in items (this should have been standard???)
 const parser = new Parser({
     customFields: {
         item: ['description'],
@@ -9,10 +10,10 @@ const parser = new Parser({
 });
 
 /**
- * polls a RSS-Feed specified by the link.
+ * polls a RSS-Feed.
  * 
- * @param link link to poll from.
- * @returns RSS-Feed parsed into Document.
+ * @param feed RSS-Feed to poll
+ * @returns RSS-Feed-Object and given RSS-Feed.
  */
 export async function pollFeed (feed: Feed): Promise<[rssType, Feed]> {
 

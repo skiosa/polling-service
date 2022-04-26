@@ -6,7 +6,7 @@ import { rssType } from "../../src/types";
 describe('Test: poll a feed', () => {
     it('should return a raw (just polled, not yet parsed) feed', async () => {
         let feed = new Feed();
-        feed.link = 'https://randaris.app/feed';
+        feed.link = 'https://www.tagesschau.de/xml/rss2/';
 
         let raw = await pollFeed(feed);
         

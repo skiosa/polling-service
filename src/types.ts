@@ -27,11 +27,18 @@ export class rssType implements Parser.Output<{description: string}> {
     keywords?: string[];
     };
 
+    /**
+     * transforms the return type from the rss-parser into an Object (better type-checking)
+     * 
+     * @param rss return type from rss-parser
+     */
     constructor (rss: {[key: string]: any} & Parser.Output<{description: string}>) {
         for (let key of Object.keys(rss)) {
+            // make required fields actually 'required'
             if (key in ['link', 'title', 'description']) {
                 this[key] = rss[key]!; // notice the extra exclamation mark here
             }
+            // copy any other given (optional) field
             else {
                 this[key] = rss[key];
             }

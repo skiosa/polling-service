@@ -7,23 +7,23 @@ const feedRepository = dataSource.getRepository(Feed);
 
 /**
  * inserts a given List of Article-Objects into the database.
- * should also update the TTL of the corresponding RSS-Feed.
+ * also updates the lastPolledAt timestamp of the corresponding RSS-Feed.
  * 
  * @param articles Articles to insert.
+ * @param feed corresponding RSS-Feed.
  */
 export async function insertArticles (articles: Array<Article>, feed: Feed) {
     if (articles.length === 0) {
-        return;
+        return [];
     }
 
     if (!dataSource.isInitialized) {
         await dataSource.initialize();
     }
-
-    // console.log(articles)
     
     let promises = new Array();
 
+    // update lastPolledAt Timestamp of polled feed
     promises.push(
         feedRepository.createQueryBuilder()
         .update()
@@ -36,6 +36,7 @@ export async function insertArticles (articles: Array<Article>, feed: Feed) {
         .execute()
     );
 
+    // check for duplicates
     articles.forEach(article => {
         articleRepository.findOne({
             select: {
@@ -50,8 +51,11 @@ export async function insertArticles (articles: Array<Article>, feed: Feed) {
             }
         })
         .then(duplicate => {
-            //console.log(duplicate);
             if (duplicate) {
+                /* 
+                by manually setting the id (which is unique), save() will not be able to insert new article
+                and thus will automatically divert to updating the existing entry (typeorm is cool ^^)
+                */
                 article.id = duplicate.id;
             }
 
