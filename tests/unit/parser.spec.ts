@@ -7,6 +7,7 @@ describe('Test: parse a raw feed', () => {
     it('should return a parsed feed', async () => {
         let feed = new Feed();
         feed.link = 'https://www.tagesschau.de/xml/rss2/';
+        feed.lastPolledAt = new Date(0);
 
         let rss = new rssType({
             title: 'tagesschau.de - Die Nachrichten der ARD',
@@ -21,7 +22,7 @@ describe('Test: parse a raw feed', () => {
         });
         
         let parsedFeed = await parseFeed(rss, feed);
-        
+
         assert.instanceOf(parsedFeed, Array, 'no Array was returned');
         parsedFeed.forEach(article => {
             assert.instanceOf(article, Article, 'contents of returned Array include non-Article Objects');
