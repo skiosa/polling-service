@@ -12,14 +12,14 @@ dotenv.config({ path: '../config/app.env' });
  * then polls those feeds, parses the raw feeds 
  * and inserts the parsed articles into the database.
  */
-function main () {
-    let feeds = getFeedsToPoll();
+async function main () {
+    let feeds = await getFeedsToPoll();
     
     feeds.forEach(feed => {
         pollFeed(feed)
         .then((raw) => parseFeed(raw))
-        .then((parsed) => insertArticles(parsed))
-        .then((inserted) => console.log(inserted))
+        .then((parsed) => insertArticles(parsed, feed))
+        .then((inserted) => {})//console.log(inserted))
         .catch((err) => {
             console.log(`error in: ${feed}:${err}`);
         }) 

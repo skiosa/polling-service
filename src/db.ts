@@ -1,7 +1,9 @@
-import { Article } from "skiosa-orm";
+import { Article, Feed } from "skiosa-orm";
 import { dataSource } from "skiosa-orm/lib/db"
+import { Raw } from "typeorm";
 
 const articleRepository = dataSource.getRepository(Article);
+const feedRepository = dataSource.getRepository(Feed);
 
 /**
  * inserts a given List of Article-Objects into the database.
@@ -9,12 +11,30 @@ const articleRepository = dataSource.getRepository(Article);
  * 
  * @param articles Articles to insert.
  */
-export async function insertArticles (articles: Array<Article>) {
+export async function insertArticles (articles: Array<Article>, feed: Feed) {
+    if (articles.length === 0) {
+        return;
+    }
+
     if (!dataSource.isInitialized) {
         await dataSource.initialize();
     }
+
+    // console.log(articles)
     
     let promises = new Array();
+
+    promises.push(
+        feedRepository.createQueryBuilder()
+        .update()
+        .set({
+            lastPolledAt: () => 'CURRENT_TIMESTAMP'
+        })
+        .where({
+            id: feed.id
+        })
+        .execute()
+    );
 
     articles.forEach(article => {
         promises.push(articleRepository.save(article));
@@ -29,11 +49,14 @@ export async function insertArticles (articles: Array<Article>) {
  * 
  * @returns list of RSS-Feeds to poll.
  */
-export function getFeedsToPoll (): Array<string> {
-    let feeds = new Array();
+export async function getFeedsToPoll (): Promise<Array<Feed>> {
+    if (!dataSource.isInitialized) {
+        await dataSource.initialize();
+    }
 
-    feeds.push("test");
-    feeds.push("another test")
+    let feeds = await feedRepository.findBy({
+        lastPolledAt: Raw((alias) => `${alias} + ttl * interval '1 second' < CURRENT_TIMESTAMP`),
+    });
     
     return feeds;
 }

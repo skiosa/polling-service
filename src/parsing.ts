@@ -1,5 +1,6 @@
-import { rawRSS } from "./types";
-import { Article } from "skiosa-orm";
+import { Article, Feed } from "skiosa-orm";
+import fetch from "node-fetch";
+import Parser from "rss-parser";
 
 /**
  * parses raw data from a RSS-Feed.
@@ -7,26 +8,47 @@ import { Article } from "skiosa-orm";
  * @param feed raw feed-data to parse.
  * @returns parsed article data.
  */
-export async function parseFeed (feed: rawRSS): Promise<Array<Article>> {
-    return new Promise<Array<Article>> ((resolve, reject) => {
-        let arr: Array<Article> = new Array();
+export async function parseFeed (data: [
+    {[key: string]: any;} & Parser.Output<{[key: string]: any;}>, 
+    Feed]): Promise<Array<Article>> {
         
-        // preprocessing to get article list form raw xml
-        let rawArr = new Array();
-        rawArr.push(feed);
+    
+    let rss = data[0];
+    let feed = data[1];
 
-        rawArr.forEach(element => {
+    let arr: Array<Article> = new Array();
+    
+    // preprocessing to get article list from document
+    // let items = Array.from(document.getElementsByTagName('item'));
+    
+    const promises = rss.items.map(async element => {
+        let hasPubDate = !(element.pubDate === undefined);
+        let pubDate = hasPubDate? new Date(element.pubDate!) : null;
+
+        // console.log(element);
+
+        if (!hasPubDate || pubDate!.getDate() < Date.now()) {
             let article = new Article();
-            
-            // the following code is a placeholder and has to be replaced when real rss-feeds are introduced.
-            article.content = element.content;
-            article.url = element.content;
-            article.description = element.content;
-            article.title = element.content;
+
+            // link, description and title are required per RSS-standard, therefore there's no need to check, whether they exist
+            article.url = element.link!;
+            article.title = element.title!;
+            article.description = element.description!;
+
+            article.feed = feed;
+
+            const response = await fetch(element.link!);
+            const text = await response.text();
+            article.content = text;
+
+            if (hasPubDate) {
+                article.publishedAt = pubDate!;
+            }
 
             arr.push(article);
-        });
-
-        resolve(arr);
+        }
     });
+
+    await Promise.all(promises);
+    return(arr);
 }
