@@ -17,7 +17,7 @@ async function main () {
     
     feeds.forEach(feed => {
         pollFeed(feed)
-        .then((raw) => parseFeed(raw))
+        .then((raw) => parseFeed(raw[0], raw[1]))
         .then((parsed) => insertArticles(parsed, feed))
         .then((inserted) => {})//console.log(inserted))
         .catch((err) => {

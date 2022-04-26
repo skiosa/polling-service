@@ -8,14 +8,8 @@ import { rssType } from "./types";
  * @param feed raw feed-data to parse.
  * @returns parsed article data.
  */
-export async function parseFeed (data: [rssType, Feed]): Promise<Array<Article>> {    
-    let rss = data[0];
-    let feed = data[1];
-
+export async function parseFeed (rss: rssType, feed: Feed): Promise<Array<Article>> {
     let arr: Array<Article> = new Array();
-    
-    // preprocessing to get article list from document
-    // let items = Array.from(document.getElementsByTagName('item'));
     
     const promises = rss.items.map(async element => {
         let hasPubDate = !(element.pubDate === undefined);

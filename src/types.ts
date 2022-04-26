@@ -1,5 +1,40 @@
-import Parser from "rss-parser";
+import Parser, { Item, PaginationLinks } from "rss-parser";
 
-export type rssType = {
+export class rssType implements Parser.Output<{description: string}> {
     [key: string]: any;
-} & Parser.Output<{description: string}>
+    image?: {
+        link?: string;
+        url: string;
+        title?: string;
+    };
+    paginationLinks?: PaginationLinks;
+    link!: string;
+    title!: string;
+    items!: ({description: string} & Item)[];
+    feedUrl?: string;
+    description!: string;
+    itunes?: {
+        [key: string]: any;
+        image?: string;
+        owner?: {
+            name?: string;
+            email?: string;
+    };
+    author?: string;
+    summary?: string;
+    explicit?: string;
+    categories?: string[];
+    keywords?: string[];
+    };
+
+    constructor (rss: {[key: string]: any} & Parser.Output<{description: string}>) {
+        for (let key of Object.keys(rss)) {
+            if (key in ['link', 'title', 'description']) {
+                this[key] = rss[key]!; // notice the extra exclamation mark here
+            }
+            else {
+                this[key] = rss[key];
+            }
+        }
+    }
+}
