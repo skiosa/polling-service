@@ -3,6 +3,7 @@ Service to poll RSS feeds and parse Metadata
 
 ## Requirements
 - npm / node.js 16
+- PostgreSQL
 
 ## Development
 We would recommend to use the Devcontainer to start developing. All necessary dependencies are installed and you don´t have to install specific tools.
