@@ -15,10 +15,10 @@ With the [Remote - Containers](https://marketplace.visualstudio.com/items?itemNa
 After your cloned the repo and started the Devcontainer you should run ``npm install`` to install all npm dependencies.
 
 ### Local Build
-To run the project locally use ``npm start``.
+To run the project locally use ``npm run start`` / ``npm start``.
 
 ### Run Tests
-To run all unit-tests use ``npm run test``. If you want code coverage you can use the ci-pipeline command which also works locally ``npm run test:ci``.
+To run all unit-tests use ``npm run test`` / ``npm test``. If you want code coverage you can use the ci-pipeline command which also works locally ``npm run test:ci``.
 
 ### Update Production
 If you want your changes applied to production you have to create a pull-request. After a merge to master the pipeline will build a new docker-image based on the [Dockerfile](Dockerfile).
