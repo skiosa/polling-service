@@ -19,8 +19,13 @@ export async function pollFeed (feed: Feed): Promise<[RssType, Feed]> {
 
     return new Promise<[RssType, Feed]> (async (resolve, reject) => {
         const rss = await parser.parseURL(feed.link).catch(err => reject(err));
-        let rssObj = new RssType(rss);
-
-        resolve([rssObj, feed]);
+        
+        try {
+            let rssObj = new RssType(rss);
+            resolve([rssObj, feed]);
+        }
+        catch (err) {
+            reject(err);
+        }
     });
 }
