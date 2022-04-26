@@ -77,9 +77,7 @@ export async function getFeedsToPoll (): Promise<Array<Feed>> {
         await dataSource.initialize();
     }
 
-    let feeds = await feedRepository.findBy({
+    return feedRepository.findBy({
         lastPolledAt: Raw((alias) => `${alias} + ttl * interval '1 second' < CURRENT_TIMESTAMP`),
     });
-    
-    return feeds;
 }

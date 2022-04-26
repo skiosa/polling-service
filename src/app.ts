@@ -19,7 +19,7 @@ async function main () {
         pollFeed(feed)
         .then((raw) => parseFeed(raw[0], raw[1]))
         .then((parsed) => insertArticles(parsed, feed))
-        .then((inserted) => {})//console.log(inserted))
+        // .then((inserted) => console.log(inserted))
         .catch((err) => {
             console.log(`error in: ${feed}:${err}`);
         }) 

@@ -1,6 +1,6 @@
 import Parser, { Item, PaginationLinks } from "rss-parser";
 
-export class rssType implements Parser.Output<{description: string}> {
+export class RssType implements Parser.Output<{description: string}> {
     [key: string]: any;
     image?: {
         link?: string;
@@ -35,7 +35,7 @@ export class rssType implements Parser.Output<{description: string}> {
     constructor (rss: {[key: string]: any} & Parser.Output<{description: string}>) {
         for (let key of Object.keys(rss)) {
             // make required fields actually 'required'
-            if (key in ['link', 'title', 'description']) {
+            if (['link', 'title', 'description'].includes(key)) {
                 this[key] = rss[key]!; // notice the extra exclamation mark here
             }
             // copy any other given (optional) field

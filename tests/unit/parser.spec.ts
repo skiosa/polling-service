@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { Article, Feed } from "skiosa-orm";
 import { parseFeed } from "../../src/parsing";
-import { rssType } from "../../src/types";
+import { RssType } from "../../src/types";
 
 describe('Test: parse a raw feed', () => {
     it('should return a parsed feed', async () => {
@@ -9,7 +9,7 @@ describe('Test: parse a raw feed', () => {
         feed.link = 'https://www.tagesschau.de/xml/rss2/';
         feed.lastPolledAt = new Date(0);
 
-        let rss = new rssType({
+        let rss = new RssType({
             title: 'tagesschau.de - Die Nachrichten der ARD',
             description: 'tagesschau.de',
             link: 'https://www.tagesschau.de',

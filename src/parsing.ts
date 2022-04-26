@@ -1,6 +1,6 @@
 import { Article, Feed } from "skiosa-orm";
 import fetch from "node-fetch";
-import { rssType } from "./types";
+import { RssType } from "./types";
 
 /**
  * parses raw data from a RSS-Feed.
@@ -9,12 +9,12 @@ import { rssType } from "./types";
  * @param feed RSS-Feed to link to.
  * @returns parsed article data array.
  */
-export async function parseFeed (rss: rssType, feed: Feed): Promise<Array<Article>> {
+export async function parseFeed (rss: RssType, feed: Feed): Promise<Array<Article>> {
     let arr: Array<Article> = new Array();
     
     // parse each item asynchronously
     const promises = rss.items.map(async element => {
-        let hasPubDate = !(element.pubDate === undefined);
+        let hasPubDate = element.pubDate !== undefined;
         let pubDate = hasPubDate? new Date(element.pubDate!) : null;
 
         // check, whether article is potentially new (reduce duplicates as early as possible)
