@@ -1,6 +1,6 @@
 import { Article, Feed } from "skiosa-orm";
 import fetch from "node-fetch";
-import Parser from "rss-parser";
+import { rssType } from "./types";
 
 /**
  * parses raw data from a RSS-Feed.
@@ -8,11 +8,7 @@ import Parser from "rss-parser";
  * @param feed raw feed-data to parse.
  * @returns parsed article data.
  */
-export async function parseFeed (data: [
-    {[key: string]: any;} & Parser.Output<{[key: string]: any;}>, 
-    Feed]): Promise<Array<Article>> {
-        
-    
+export async function parseFeed (data: [rssType, Feed]): Promise<Array<Article>> {    
     let rss = data[0];
     let feed = data[1];
 

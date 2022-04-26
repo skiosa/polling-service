@@ -1,5 +1,6 @@
 import { Feed } from "skiosa-orm";
 import Parser from 'rss-parser';
+import { rssType } from "./types";
 
 const parser = new Parser({
     customFields: {
@@ -13,14 +14,9 @@ const parser = new Parser({
  * @param link link to poll from.
  * @returns RSS-Feed parsed into Document.
  */
-export async function pollFeed (feed: Feed): Promise<[
-    {[key: string]: any;} & Parser.Output<{[key: string]: any;}>, 
-    Feed]> {
+export async function pollFeed (feed: Feed): Promise<[rssType, Feed]> {
 
-    return new Promise<[
-        {[key: string]: any;} & Parser.Output<{[key: string]: any;}>, 
-        Feed]> (async (resolve, reject) => {
-
+    return new Promise<[rssType, Feed]> (async (resolve, reject) => {
         const rss = await parser.parseURL(feed.link).catch(err => reject(err));
         resolve([rss, feed]);
     });

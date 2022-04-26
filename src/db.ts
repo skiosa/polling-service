@@ -37,7 +37,26 @@ export async function insertArticles (articles: Array<Article>, feed: Feed) {
     );
 
     articles.forEach(article => {
-        promises.push(articleRepository.save(article));
+        articleRepository.findOne({
+            select: {
+                id: true,
+            },
+            where: {
+                title: article.title,
+                url: article.url,
+                feed: {
+                    id : article.feed!.id,
+                },
+            }
+        })
+        .then(duplicate => {
+            //console.log(duplicate);
+            if (duplicate) {
+                article.id = duplicate.id;
+            }
+
+            promises.push(articleRepository.save(article));
+        });
     });
     
     return await Promise.all(promises);
